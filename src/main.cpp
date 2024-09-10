@@ -35,5 +35,5 @@ void setup() {
 }
 
 void loop() {
-    // No es necesario hacer nada aquí
+    // No es necesario hacer nada aqui
 }
