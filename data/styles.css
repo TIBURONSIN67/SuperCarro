@@ -1,0 +1,260 @@
+/* Reseteo de márgenes y rellenos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Asegura que padding y border se incluyan en el width/height */
+}
+
+/* Estilo de la cabecera */
+.header {
+    background: #057df4;
+    height: 15vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Estilo del artículo principal */
+.article {
+    display: flex;
+    justify-content: center;
+    height: 85vh;
+    position: relative;
+    background-color: #f0f0f0; /* Fondo claro para el área principal */
+}
+
+/* Estilo para opciones ocultas */
+.options {
+    display: none;
+}
+
+.options.toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    column-gap: 20px;
+    background-color: #ffffff; /* Fondo blanco para el área de opciones */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para el botón de retroceso */
+#back-btn {
+    width: 150px;
+    height: 40px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #f05454;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#back-btn:hover {
+    background-color: #d43f3f; /* Color más oscuro al pasar el ratón */
+}
+
+/* Estilo para los botones principales */
+#play, #options-btn, #gyro, #buttons {
+    width: 200px;
+    height: 70px;
+    flex-basis: 0;
+    flex-grow: 1;
+    background-color: #057df4;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#play:hover, #options-btn:hover, #gyro:hover, #buttons:hover {
+    background-color: #045bb1;
+}
+
+/* Estilo para la sección de controles */
+#controls-section {
+    display: none;
+}
+
+#controls-section.toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh;
+    width: 100%;
+    background-color: #fcfcfd;
+    padding: 20px;
+}
+
+.controls-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 90%;
+    max-width: 600px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.controls-main {
+    flex-direction: row;
+    align-items: center;
+}
+
+.vertical-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Estilo para el indicador de luz */
+#light {
+    background: #575757;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+/* Estilo para los botones de control "Izquierda" y "Derecha" */
+#left, #right {
+    user-select: none; /* Evitar selección de texto */
+}
+
+/* También puedes aplicar esta propiedad a otros botones si lo necesitas */
+.control-btn-1, .control-btn {
+    user-select: none; /* Evitar selección de texto en otros botones */
+}
+#light.toggle {
+    background-color: #f7ef07;
+    box-shadow: 0px 0px 15px #ffffff;
+}
+
+/* Estilo para los botones de control */
+.row-control {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+    padding: 5px;
+}
+
+.control-btn-1, .control-btn {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.control-btn-1 {
+    width: 80px;
+    height: 30px;
+    font-size: 10px;
+    background-color: #057df4;
+}
+
+.control-btn {
+    flex-grow: 1;
+    background-color: #057df4;
+}
+
+.control-btn:hover {
+    background-color: #045bb1;
+}
+
+#stop {
+    background-color: #ff5555;
+}
+
+#stop.toggle {
+    background: #750707;
+}
+
+#forward.toggle, #backward.toggle, #left.toggle, #right.toggle {
+    background: #0b2a91;
+}
+
+/* Estilo para la sección de giroscopio */
+#gyro-section {
+    display: none;
+}
+
+#gyro-section.toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0; /* Fondo claro para la sección de giroscopio */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%; /* Ajusta el ancho al 90% del contenedor padre */
+    max-width: 600px; /* Máximo ancho para pantallas grandes */
+    margin: auto; /* Centra el contenido horizontalmente */
+}
+
+#gyro-section h2 {
+    color: #057df4; /* Color del título de la sección */
+    margin-bottom: 20px;
+    font-size: 1.5rem; /* Tamaño de fuente ajustable */
+    text-align: center; /* Centra el texto */
+}
+
+#gyro-section div {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#gyro-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 1rem; /* Tamaño de fuente ajustable */
+}
+
+#gyro-section input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#gyro-section input[type="number"] {
+    width: 100%; /* Ajusta el ancho de los campos numéricos al 100% */
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 600px) {
+    #gyro-section {
+        padding: 10px;
+    }
+
+    #gyro-section h2 {
+        font-size: 1.25rem; /* Tamaño de fuente más pequeño para pantallas pequeñas */
+    }
+
+    #gyro-section input {
+        font-size: 0.875rem; /* Tamaño de fuente más pequeño para campos de entrada */
+    }
+}
