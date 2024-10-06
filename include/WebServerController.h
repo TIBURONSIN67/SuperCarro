@@ -4,13 +4,17 @@
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
+#include <string>
 #include "HardwareController.h"
 
 #define JSON_BUFFER_SIZE 512 // Define el tamaño del buffer JSON
 
+String state = "STOP"; // Valor por defecto del estado
+
 class WebServerController {
 public:
-    WebServerController(HardwareController &hardwareController) : server(80), hardwareController(hardwareController) {}
+    WebServerController(HardwareController &hardwareController) 
+        : server(80), ws("/ws"), hardwareController(hardwareController) {}
 
     void begin() {
         // Inicia SPIFFS
@@ -31,12 +35,12 @@ public:
             request->send(SPIFFS, "/main.js", "application/javascript");
         });
 
-        // Configura la ruta para manejar solicitudes POST
-        server.on("/control", HTTP_POST, [](AsyncWebServerRequest *request) {
-            // No es necesario enviar una respuesta aquí, ya que se maneja en el callback
-        }, NULL, [this](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
-            this->handlePostRequest(request, data, len, index, total);
+        // Configura WebSocket
+        ws.onEvent([this](AsyncWebSocket *server, AsyncWebSocketClient *client, 
+                          AwsEventType type, void *arg, uint8_t *data, size_t len) {
+            this->handleWebSocketEvent(server, client, type, arg, data, len);
         });
+        server.addHandler(&ws);
 
         // Manejo de rutas no encontradas
         server.onNotFound([](AsyncWebServerRequest *request) {
@@ -45,51 +49,60 @@ public:
 
         // Inicia el servidor
         server.begin();
-        Serial.println("Servidor HTTP iniciado");
+        Serial.println("Servidor HTTP y WebSocket iniciado");
+    }
+
+    void sendWebSocketMessage(const String& message) {
+        ws.textAll(message); // Enviar mensaje a todos los clientes conectados
     }
 
 private:
     AsyncWebServer server;
+    AsyncWebSocket ws;
     HardwareController &hardwareController;
 
-    void handlePostRequest(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
-        static String body = "";
+    void handleWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, 
+    AwsEventType type, void *arg, uint8_t *data, size_t len) {
+        if (type == WS_EVT_CONNECT) {
+            Serial.printf("Cliente WebSocket conectado: %u\n", client->id());
 
-        if (index == 0) {
-            body = "";
-        }
-
-        body += String((char*)data, len);
-
-        if (index + len == total) {
+            // Enviar el estado y la velocidad actuales al cliente conectado
             DynamicJsonDocument doc(JSON_BUFFER_SIZE);
-            DeserializationError error = deserializeJson(doc, body);
-
-            if (error) {
-                Serial.println("Error al deserializar JSON: " + String(error.c_str()));
-                request->send(400, "text/plain", "Error al deserializar JSON");
-                return;
-            }
-
-            String state = doc["state"].as<String>();
-            String gameMode = doc["gameMode"].as<String>();
-            int speed = 255; // Valor predeterminado
-
-            if (doc.containsKey("speed")) {
-                speed = doc["speed"].as<int>();
-                if (speed < 0) speed = 0;
-                if (speed > 255) speed = 255;
-            }
-
-            Serial.print("Estado recibido: ");
-            Serial.println(state);
-            Serial.print("Velocidad recibida: ");
-            Serial.println(speed);
-
-            hardwareController.control(state,speed);
-
-            request->send(200, "text/plain", "Datos recibidos correctamente");
+            doc["state"] = state;
+            String jsonString;
+            serializeJson(doc, jsonString);
+            client->text(jsonString);
+        } else if (type == WS_EVT_DISCONNECT) {
+            Serial.printf("Cliente WebSocket desconectado: %u\n", client->id());
+        } else if (type == WS_EVT_DATA) {
+            handleWebSocketMessage(client, data, len);
         }
+    }
+
+    void handleWebSocketMessage(AsyncWebSocketClient *client, uint8_t *data, size_t len) {
+        String message = String((char*)data).substring(0, len);
+        Serial.printf("Mensaje WebSocket recibido: %s\n", message.c_str());
+
+        // Procesar el JSON recibido
+        DynamicJsonDocument doc(JSON_BUFFER_SIZE);
+        DeserializationError error = deserializeJson(doc, message);
+
+        if (error) {
+            Serial.println("Error al deserializar JSON: " + String(error.c_str()));
+            client->text("Error al deserializar JSON");
+            return;
+        }
+
+        // Manejar los datos recibidos
+        if (doc.containsKey("state")) {
+            state = doc["state"].as<String>();
+        }
+
+        // Controlar el hardware basado en los datos recibidos
+        hardwareController.control(state);
+
+        // Responder con éxito
+        client->text("Datos recibidos correctamente");
     }
 };
 

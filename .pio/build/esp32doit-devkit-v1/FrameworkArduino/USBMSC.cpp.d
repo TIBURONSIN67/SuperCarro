@@ -1,4 +1,4 @@
 .pio/build/esp32doit-devkit-v1/FrameworkArduino/USBMSC.cpp.o: \
- /home/tiburonsin/.platformio/packages/framework-arduinoespressif32/cores/esp32/USBMSC.cpp \
- /home/tiburonsin/.platformio/packages/framework-arduinoespressif32/cores/esp32/USBMSC.h \
- /home/tiburonsin/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include/sdkconfig.h
+ C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/cores/esp32/USBMSC.cpp \
+ C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/cores/esp32/USBMSC.h \
+ C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include/sdkconfig.h

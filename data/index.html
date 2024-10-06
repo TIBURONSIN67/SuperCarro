@@ -25,30 +25,24 @@
                 <div class="controls-container">
                     <button id="light" class="control-btn"></button>
                     <div class="row-control">
-                        <button id="stop" class="control-btn-1">P</button>
-                        <button id="forward" class="control-btn-1">D</button>
-                        <button id="backward" class="control-btn-1">R</button>
+                        <button id="stop-btn" class="control-btn-1">P</button>
+                        <button id="forward-btn" class="control-btn-1">D</button>
+                        <button id="backward-btn" class="control-btn-1">R</button>
                     </div>
                     <div class="row controls-main">
-                        <button id="left" class="control-btn">Izquierda</button>
-
-                        <button id="right" class="control-btn">Derecha</button>
+                        <input type="range" id="left" class="control-slider" min="0" max="255" value="0">
+                        <input type="range" id="right" class="control-slider" min="0" max="255" value="0">
                     </div>
                 </div>
             </section>
             <section id="gyro-section">
-                <h2>Configuración del Giroscopio</h2>
-                <div>
-                    <label for="gammaThreshold">Umbral Gamma:</label>
-                    <input type="number" id="gammaThreshold" value="10">
-                </div>
-                <div>
-                    <label for="betaThreshold">Umbral Beta:</label>
-                    <input type="number" id="betaThreshold" value="15">
-                </div>
-                <div>
-                    <label for="sensitive">Sensibilidad:</label>
-                    <input type="number" id="sensitive" value="30">
+                <div class="controls-container">
+                    <button id="gyro-light" class="control-btn"></button>
+                    <div class="row-control">
+                        <button id="gyro-stop" class="control-btn-1">P</button>
+                        <button id="gyro-forward" class="control-btn-1">D</button>
+                        <button id="gyro-backward" class="control-btn-1">R</button>
+                    </div>
                 </div>
             </section>
         </article>

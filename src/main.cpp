@@ -3,19 +3,20 @@
 #include "WebServerController.h"
 
 // Pines definidos
-#define PIN_LEFT 13
-#define PIN_RIGHT 12
-#define PIN_GO 14
-#define PIN_BACK 27
-#define PIN_LIGHT 2
-#define PIN_PWM 25
+#define PIN_MOTOR_LEFT_FORWARD 13    // Motor izquierdo hacia adelante
+#define PIN_MOTOR_RIGHT_FORWARD 12   // Motor derecho hacia adelante
+#define PIN_MOTOR_LEFT_BACKWARD 14   // Motor izquierdo hacia atrás
+#define PIN_MOTOR_RIGHT_BACKWARD 27  // Motor derecho hacia atrás
+#define PIN_LIGHT 2                  // Pin para la luz
+#define PIN_PWM1 25                   // Pin para el control de velocidad PWM
+#define PIN_PWM2 35                   // Pin para el control de velocidad PWM
 
 // Configuración de la red WiFi
 const char *SSID = "Super Lambo";
 const char *PASSWORD = "12345678";
 
 // Instancia del controlador de hardware
-HardwareController hardwareController(PIN_LEFT, PIN_RIGHT, PIN_GO, PIN_BACK, PIN_LIGHT, PIN_PWM);
+HardwareController hardwareController(PIN_MOTOR_LEFT_FORWARD, PIN_MOTOR_RIGHT_FORWARD, PIN_MOTOR_LEFT_BACKWARD, PIN_MOTOR_RIGHT_BACKWARD, PIN_LIGHT, PIN_PWM1, PIN_PWM2);
 
 // Instancia del controlador del servidor web
 WebServerController webServerController(hardwareController);
@@ -35,5 +36,5 @@ void setup() {
 }
 
 void loop() {
-    // No es necesario hacer nada aqui
+    // No es necesario hacer nada aquí
 }

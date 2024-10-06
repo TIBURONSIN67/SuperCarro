@@ -1,3 +1,3 @@
 .pio/build/esp32doit-devkit-v1/FrameworkArduino/cbuf.cpp.o: \
- /home/tiburonsin/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.cpp \
- /home/tiburonsin/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.h
+ C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.cpp \
+ C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.h
