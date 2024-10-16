@@ -39,7 +39,6 @@ class WebSocketController {
     }
 }
 
-
 // Clase principal del controlador
 class MainController {
     constructor() {
@@ -57,10 +56,10 @@ class MainController {
 
     getInitialStates() {
         return {
-            go: { state: "GO" },
+            go: { state: "FORWARD" },
             none: { state: "NONE" },
             stop: { state: "STOP" },
-            back: { state: "BACK" },
+            back: { state: "BACKWARD" },
             left: { state: "LEFT" },
             right: { state: "RIGHT" },
             light_on: { state: "LIGHT_ON" },
@@ -162,9 +161,9 @@ class GyroController{
         }
     }
     controlBindEvents(){
-        this.gyroForwardBtn.addEventListener("click", () => this.handleForwardButtonClick());
-        this.gyroBackwardBtn.addEventListener("click", () => this.handleBackwardButtonClick());
-        this.gyroStopBtn.addEventListener("click", () => this.handleStopButtonClick());
+        this.gyroForwardBtn.addEventListener("click", this.handleForwardButtonClick.bind(this));
+        this.gyroBackwardBtn.addEventListener("click", this.handleBackwardButtonClick.bind(this));
+        this.gyroStopBtn.addEventListener("click", this.handleStopButtonClick.bind(this));
 
         this.gyroLight.addEventListener("click", this.toggleLight.bind(this));
     }
@@ -233,83 +232,142 @@ class GyroController{
 // Clase para el control del carro
 class ControlController {
     constructor(websocketController, states) {
+        // Inicialización de la clase
         this.websocketController = websocketController;
         this.states = states;
+
+        // Variables para mantener el estado de la interfaz
         this.lightOn = false;
         this.isForward = false;
         this.isBackward = false;
         this.isStop = false;
+        this.lastVelocity = 0; // Almacenar el último valor enviado
+
+        // Llamada a la inicialización del controlador
         this.controllerInit();
     }
 
+    // ------------------------------
+    // Inicialización y Setup
+    // ------------------------------
+
+    // Inicializa el controlador y configura los elementos del DOM y eventos
     controllerInit() {
         console.log("Inicializando ControlController...");
-        this.cacheDOMElements();
-        this.controlBindEvents();
+        this.cacheDOMElements();   // Obtener elementos DOM
+        this.controlBindEvents();  // Enlazar los eventos
     }
 
+    // Cachear los elementos del DOM para evitar buscarlos repetidamente
     cacheDOMElements() {
         this.light = document.getElementById("light");
         this.leftSlider = document.getElementById("left");
         this.rightSlider = document.getElementById("right");
-        this.forwardBtn = document.getElementById("forward-btn"); // ID actualizado
-        this.backwardBtn = document.getElementById("backward-btn"); // ID actualizado
-        this.stopBtn = document.getElementById("stop-btn"); // ID actualizado
+        this.forwardBtn = document.getElementById("forward-btn");
+        this.backwardBtn = document.getElementById("backward-btn");
+        this.stopBtn = document.getElementById("stop-btn");
 
-        // Verificar si todos los elementos DOM están definidos
+        // Verificar si los elementos DOM se obtuvieron correctamente
         if (!this.light || !this.leftSlider || !this.rightSlider ||
             !this.forwardBtn || !this.backwardBtn || !this.stopBtn) {
             throw new Error('Uno o más elementos DOM están indefinidos.');
         }
     }
 
+    // ------------------------------
+    // Enlace de Eventos
+    // ------------------------------
+
+    // Enlaza los eventos de los sliders y botones a sus funciones correspondientes
     controlBindEvents() {
-        this.leftSlider.addEventListener("input", () => this.handleSliderChange(this.leftSlider, this.states.left));
-        this.rightSlider.addEventListener("input", () => this.handleSliderChange(this.rightSlider, this.states.right));
 
-        this.forwardBtn.addEventListener("click", () => this.handleForwardButtonClick());
-        this.backwardBtn.addEventListener("click", () => this.handleBackwardButtonClick());
-        this.stopBtn.addEventListener("click", () => this.handleStopButtonClick());
+        // Eventos para los botones
+        this.forwardBtn.addEventListener("click", this.handleForwardButtonClick.bind(this));
+        this.backwardBtn.addEventListener("click", this.handleBackwardButtonClick.bind(this));
+        this.stopBtn.addEventListener("click", this.handleStopButtonClick.bind(this));
 
+        // Evento para encender/apagar la luz
         this.light.addEventListener("click", this.toggleLight.bind(this));
 
-        // Agregar eventos para el mouseup y touchend en los sliders
-        this.leftSlider.addEventListener("mouseup", () => this.resetSlider(this.leftSlider));
-        this.leftSlider.addEventListener("touchend", () => this.resetSlider(this.leftSlider));
-        this.rightSlider.addEventListener("mouseup", () => this.resetSlider(this.rightSlider));
-        this.rightSlider.addEventListener("touchend", () => this.resetSlider(this.rightSlider));
+        // Eventos para reiniciar sliders 
+        this.leftSlider.addEventListener("touchend", this.handleSliderEnd.bind(this, this.leftSlider));
+        this.rightSlider.addEventListener("touchend", this.handleSliderEnd.bind(this, this.rightSlider));
+
+        this.leftSlider.addEventListener("input", this.handleLeftSlider.bind(this));
+        this.rightSlider.addEventListener("input", this.handleRightSlider.bind(this));
     }
 
-handleSliderChange(slider,state) {
-    const X_velocity = this.roundSliderValue(slider); // Redondear el valor del slider
-    console.log(`Slider ${slider.id} changed to: ${X_velocity}`);
-    
-    // Crear un objeto JSON para enviar
-    const message = {
-        state : state
-    };
 
-    // Enviar el objeto JSON si la velocidad es mayor a 0
-    if (X_velocity > 0) {
-        this.websocketController.send(state);
-    } else {
-        this.websocketController.send(this.states.none); // Detener cuando el slider está en 0
-    }
-}
+    // ------------------------------
+    // Manejo de Sliders
+    // ------------------------------
 
-
-    resetSlider(slider) {
-        slider.value = 0; // Reiniciar el valor del slider a 0
-        this.websocketController.send(this.states.none); // Detener el estado
-        console.log(`Slider ${slider.id} reset to 0`);
-    }
-
-    roundSliderValue(slider) {
-        const roundedValue = Math.round(slider.value / 15) * 15; // Redondear a múltiplos de 15
-        slider.value = roundedValue; // Actualizar el valor del slider
-        return roundedValue;
+    // Reinicia el valor del slider a 0 cuando se suelta
+    handleSliderEnd(slider) {
+        slider.value = 0;  // Reiniciar el slider
+        this.websocketController.send(this.states.none)
+        if (this.isBackward){
+            this.backwardBtn.classList.add("toggle");
+            this.websocketController.send(this.states.back);
+            console.log("retrocediendo");
+        }
+        else if (this.isForward){
+            this.forwardBtn.classList.add("toggle");
+            this.websocketController.send(this.states.go);
+            console.log("avanzando");
+        }
+        else if (this.isStop){
+            this.stopBtn.classList.add("toggle");
+            this.websocketController.send(this.states.stop);
+            console.log("detenido");
+        }
     }
 
+    // Maneja el slider izquierdo
+    handleLeftSlider() {
+        // Redondear el valor del slider a pasos de 15
+        let velocity = Math.round(this.leftSlider.value / 15) * 17; // Redondear a múltiplos de 15
+
+        // Si el valor redondeado está en el rango permitido y es diferente del último valor enviado
+        if (velocity > 0 && velocity <= 255 && velocity !== this.lastLeftVelocity) {
+            this.websocketController.send({"velocity": velocity}); // Enviar la velocidad
+            this.websocketController.send(this.states.left); // Enviar el estado de "left"
+            console.log(velocity); // Imprimir el valor
+            this.lastLeftVelocity = velocity; // Actualizar el último valor enviado
+        }
+    }
+
+    // Maneja el slider derecho
+    handleRightSlider() {
+        // Redondear el valor del slider a pasos de 15
+        let velocity = Math.round(this.rightSlider.value / 15) * 15; // Redondear a múltiplos de 15
+
+        // Si el valor redondeado está en el rango permitido y es diferente del último valor enviado
+        if (velocity > 0 && velocity <= 255 && velocity !== this.lastRightVelocity) {
+            this.websocketController.send({"velocity": velocity}); // Enviar la velocidad
+            this.websocketController.send(this.states.right); // Enviar el estado de "right"
+            console.log(velocity); // Imprimir el valor
+            this.lastRightVelocity = velocity; // Actualizar el último valor enviado
+        }
+    }
+    // ------------------------------
+    // Manejo de Botones
+    // ------------------------------
+
+    // Manejador para el botón de retroceder
+    handleBackwardButtonClick() {
+        if (!this.isBackward) {
+            this.deactivateOtherButtons(this.backwardBtn);
+            this.backwardBtn.classList.add("toggle");
+            this.websocketController.send(this.states.back);
+            this.isBackward = true;
+        } else {
+            this.backwardBtn.classList.remove("toggle");
+            this.websocketController.send(this.states.stop);
+            this.isBackward = false;
+        }
+    }
+    // Manejador para el botón de retroceder
     handleForwardButtonClick() {
         if (!this.isForward) {
             this.deactivateOtherButtons(this.forwardBtn);
@@ -323,19 +381,7 @@ handleSliderChange(slider,state) {
         }
     }
 
-    handleBackwardButtonClick() {
-        if (!this.isBackward) {
-            this.deactivateOtherButtons(this.backwardBtn);
-            this.backwardBtn.classList.add("toggle");
-            this.websocketController.send(this.states.back);
-            this.isBackward = true;
-        } else {
-            this.backwardBtn.classList.remove("toggle");
-            this.websocketController.send(this.states.stop);
-            this.isBackward = false;
-        }
-    }
-
+    // Manejador para el botón de detener
     handleStopButtonClick() {
         if (!this.isStop) {
             this.deactivateOtherButtons(this.stopBtn);
@@ -349,6 +395,7 @@ handleSliderChange(slider,state) {
         }
     }
 
+    // Desactivar los botones que no están activos para mantener la interfaz clara
     deactivateOtherButtons(activeButton) {
         if (activeButton !== this.forwardBtn && this.isForward) {
             this.forwardBtn.classList.remove("toggle");
@@ -366,9 +413,16 @@ handleSliderChange(slider,state) {
         }
     }
 
+    // ------------------------------
+    // Manejo de la Luz
+    // ------------------------------
+
+    // Manejador para encender/apagar la luz
     toggleLight() {
-        this.lightOn = !this.lightOn;
+        this.lightOn = !this.lightOn;  // Cambiar el estado de la luz
         this.light.classList.toggle("toggle", this.lightOn);
+        
+        // Enviar el estado correspondiente al WebSocket
         const state = this.lightOn ? this.states.light_on : this.states.light_off;
         this.websocketController.send(state);
     }

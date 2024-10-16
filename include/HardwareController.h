@@ -27,14 +27,14 @@ public:
     // Función para controlar el movimiento
     void control(String state) {
 
-        if (state == "GO") {
+        if (state == "FORWARD") {
             // Avanza en línea recta
             digitalWrite(PIN_MOTOR_LEFT_BACKWARD, LOW);
             digitalWrite(PIN_MOTOR_RIGHT_BACKWARD, LOW);
             digitalWrite(PIN_MOTOR_LEFT_FORWARD, HIGH);
             digitalWrite(PIN_MOTOR_RIGHT_FORWARD, HIGH);
         } 
-        else if (state == "BACK") {
+        else if (state == "BACKWARD") {
             // Retrocede en línea recta
             digitalWrite(PIN_MOTOR_LEFT_FORWARD, LOW);
             digitalWrite(PIN_MOTOR_RIGHT_FORWARD, LOW);
@@ -57,7 +57,7 @@ public:
             digitalWrite(PIN_MOTOR_RIGHT_FORWARD, LOW);
             digitalWrite(PIN_MOTOR_RIGHT_BACKWARD, HIGH); // Motor derecho hacia atrás
         }
-        else if (state == "STOP" || state == "NONE") {
+        else if (state == "STOP") {
             // Avanza en línea recta
             digitalWrite(PIN_MOTOR_LEFT_BACKWARD, LOW);
             digitalWrite(PIN_MOTOR_RIGHT_BACKWARD, LOW);
