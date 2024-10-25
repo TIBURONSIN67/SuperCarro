@@ -10,12 +10,6 @@
             "includePath": [
                 "D:/projects/SuperCarro/include",
                 "D:/projects/SuperCarro/src",
-<<<<<<< HEAD
-=======
-                "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
-                "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/libraries/FS/src",
-                "D:/projects/SuperCarro/lib/ArduinoJson/src",
->>>>>>> nueva-rama
                 "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
                 "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include",
                 "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos",
@@ -212,11 +206,7 @@
                 "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include",
                 "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/cores/esp32",
                 "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/variants/doitESP32devkitV1",
-<<<<<<< HEAD
                 "D:/projects/SuperCarro/lib/ArduinoJson/src",
-=======
-                "D:/projects/SuperCarro/lib/AsyncTCP",
->>>>>>> nueva-rama
                 "D:/projects/SuperCarro/lib/ESPAsyncWebServer",
                 "D:/projects/SuperCarro/lib/arduinoWebSockets/src",
                 "D:/projects/SuperCarro/.pio/libdeps/esp32doit-devkit-v1/AsyncTCP/src",
@@ -260,12 +250,6 @@
                 "path": [
                     "D:/projects/SuperCarro/include",
                     "D:/projects/SuperCarro/src",
-<<<<<<< HEAD
-=======
-                    "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
-                    "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/libraries/FS/src",
-                    "D:/projects/SuperCarro/lib/ArduinoJson/src",
->>>>>>> nueva-rama
                     "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
                     "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include",
                     "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos",
@@ -462,11 +446,7 @@
                     "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include",
                     "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/cores/esp32",
                     "C:/Users/tibur/.platformio/packages/framework-arduinoespressif32/variants/doitESP32devkitV1",
-<<<<<<< HEAD
                     "D:/projects/SuperCarro/lib/ArduinoJson/src",
-=======
-                    "D:/projects/SuperCarro/lib/AsyncTCP",
->>>>>>> nueva-rama
                     "D:/projects/SuperCarro/lib/ESPAsyncWebServer",
                     "D:/projects/SuperCarro/lib/arduinoWebSockets/src",
                     "D:/projects/SuperCarro/.pio/libdeps/esp32doit-devkit-v1/AsyncTCP/src",
