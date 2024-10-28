@@ -26,14 +26,12 @@ class HardwareController {
         pinMode(PIN_MOTOR_RIGHT_BACKWARD, OUTPUT);
         pinMode(PIN_LIGHT, OUTPUT);
 
-        // Inicializa los pines en LOW
         stop();
-        setLight(false);
+        lightOff();
     }
 
   // Método para avanzar
-    void moveForward() {
-        Serial.println("Avanzando");
+    void Forward() {
         digitalWrite(PIN_MOTOR_LEFT_BACKWARD, LOW);
         digitalWrite(PIN_MOTOR_RIGHT_BACKWARD, LOW);
         digitalWrite(PIN_MOTOR_LEFT_FORWARD, HIGH);
@@ -41,8 +39,7 @@ class HardwareController {
     }
 
     // Método para retroceder
-    void moveBackward() {
-        Serial.println("Retrocediendo");
+    void Backward() {
         digitalWrite(PIN_MOTOR_LEFT_FORWARD, LOW);
         digitalWrite(PIN_MOTOR_RIGHT_FORWARD, LOW);
         digitalWrite(PIN_MOTOR_LEFT_BACKWARD, HIGH);
@@ -51,7 +48,6 @@ class HardwareController {
 
     // Método para girar a la izquierda
     void turnLeft() {
-        Serial.println("Girando a la izquierda");
         digitalWrite(PIN_MOTOR_LEFT_FORWARD, LOW);
         digitalWrite(PIN_MOTOR_LEFT_BACKWARD, HIGH); // Motor izquierdo hacia atrás
         digitalWrite(PIN_MOTOR_RIGHT_FORWARD, HIGH); // Motor derecho hacia adelante
@@ -60,7 +56,6 @@ class HardwareController {
 
     // Método para girar a la derecha
     void turnRight() {
-        Serial.println("Girando a la derecha");
         digitalWrite(PIN_MOTOR_LEFT_FORWARD, HIGH); // Motor izquierdo hacia adelante
         digitalWrite(PIN_MOTOR_LEFT_BACKWARD, LOW);
         digitalWrite(PIN_MOTOR_RIGHT_FORWARD, LOW);
@@ -69,25 +64,23 @@ class HardwareController {
 
     // Método para detener el robot
     void stop() {
-        Serial.println("PARADO");
         digitalWrite(PIN_MOTOR_LEFT_FORWARD, LOW);
         digitalWrite(PIN_MOTOR_RIGHT_FORWARD, LOW);
         digitalWrite(PIN_MOTOR_LEFT_BACKWARD, LOW);
         digitalWrite(PIN_MOTOR_RIGHT_BACKWARD, LOW);
+        digitalWrite(PIN_MOTOR_LEFT_FORWARD, HIGH);
+        digitalWrite(PIN_MOTOR_RIGHT_FORWARD, HIGH);
     }
 
-    // Método para encender/apagar las luces
-    void setLight(bool state) {
-        if (state) {
-            Serial.println("LUCES_ENCENDIDAS");
-            // Aquí va el código para encender las luces
-        } else {
-            Serial.println("LUCES_APAGADAS");
-            // Aquí va el código para apagar las luces
-        }
+    // Método para apagar las luces
+    void lightOff() {
+        digitalWrite(PIN_LIGHT, LOW);
     }
 
-
+    // Método para encender
+    void lightOn() {
+        digitalWrite(PIN_LIGHT, HIGH);
+    }
     private:
         const int 
                 PIN_MOTOR_LEFT_FORWARD, 
