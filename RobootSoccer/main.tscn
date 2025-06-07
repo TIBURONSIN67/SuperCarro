@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdx7qu2xjkte4"]
+
+[ext_resource type="Script" uid="uid://57v0lsecsin5" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://mawh4w2xj7dn" path="res://Modules/controller.tscn" id="2_0xm2m"]
+
+[node name="Main" type="CanvasLayer"]
+script = ExtResource("1_ig7tw")
+tiempo_minutos = 0.1
+contenedor_controles = NodePath("Controller")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -131.5
+offset_top = -55.0
+offset_right = 131.5
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Autorisar" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 32
+text = "Autorizar Mando"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+placeholder_text = "Ingrese ID"
+alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Controller" parent="." instance=ExtResource("2_0xm2m")]
+visible = false
