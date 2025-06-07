@@ -3,7 +3,7 @@ extends Node
 class_name WebSocketClient
 
 var socket := WebSocketPeer.new()
-const SERVER_URL := "ws://192.168.4.1:81"
+const SERVER_URL := "ws://192.168.43.20:81"
 
 var is_connected := false
 

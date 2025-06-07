@@ -25,7 +25,7 @@ void WebSocketServerHandler::begin(const char* ssid, const char* password) {
 
     // ⚙️ Configurar IP fija (estática)
     IPAddress local_IP(192, 168, 43, 20);   // IP deseada del ESP32
-    IPAddress gateway(192, 168, 43, 1);      // IP del router
+    IPAddress gateway(192, 168, 144, 208);      // IP del router
     IPAddress subnet(255, 255, 255, 0);      // Máscara de subred
 
     if (!WiFi.config(local_IP, gateway, subnet)) {
