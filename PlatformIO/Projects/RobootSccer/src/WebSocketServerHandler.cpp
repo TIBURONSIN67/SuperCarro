@@ -21,15 +21,44 @@ void WebSocketServerHandler::begin(const char* ssid, const char* password) {
         delay(1000);
     }
 
-    WiFi.softAP(ssid, password);
-    IPAddress IP = WiFi.softAPIP();
-    Serial.printf("Access Point creado. IP: %s\n", IP.toString().c_str());
+    WiFi.mode(WIFI_STA); // Modo cliente
 
+    // ⚙️ Configurar IP fija (estática)
+    IPAddress local_IP(192, 168, 43, 20);   // IP deseada del ESP32
+    IPAddress gateway(192, 168, 43, 1);      // IP del router
+    IPAddress subnet(255, 255, 255, 0);      // Máscara de subred
+
+    if (!WiFi.config(local_IP, gateway, subnet)) {
+        Serial.println("⚠️ Error al configurar IP estática.");
+    }
+
+    // 🌐 Intentar conectar infinitamente
+    Serial.println("Conectando a Wi-Fi...");
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(1000);
+        Serial.print(".");
+        
+        // Si falla, reintenta:
+        if (WiFi.status() == WL_DISCONNECTED) {
+            Serial.println("\nIntentando reconectar...");
+            WiFi.disconnect();
+            delay(1000);
+            WiFi.begin(ssid, password);
+        }
+    }
+
+    Serial.println("\nConectado a la red Wi-Fi.");
+    Serial.print("📡 Dirección IP: ");
+    Serial.println(WiFi.localIP());
+
+    // Iniciar tu lógica
     controller.begin();
-
     webSocket.begin();
     webSocket.onEvent(_webSocketEventStatic);
 }
+
 
 void WebSocketServerHandler::loop() {
     webSocket.loop();

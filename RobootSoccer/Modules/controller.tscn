@@ -8,29 +8,41 @@
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_8etvv")
-joistick = NodePath("joystick")
+joistick = NodePath("Control/joystick")
 
-[node name="Up" type="TouchScreenButton" parent="."]
+[node name="Control" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Up" type="TouchScreenButton" parent="Control"]
 position = Vector2(866, 115)
 texture_normal = ExtResource("2_msvkn")
 action = "move_up"
 
-[node name="Down" type="TouchScreenButton" parent="."]
+[node name="Down" type="TouchScreenButton" parent="Control"]
 position = Vector2(859, 390)
 texture_normal = ExtResource("2_msvkn")
 action = "move_down"
 
-[node name="Left" type="TouchScreenButton" parent="."]
+[node name="Left" type="TouchScreenButton" parent="Control"]
 position = Vector2(734, 255)
 texture_normal = ExtResource("2_msvkn")
 action = "move_left"
 
-[node name="Right" type="TouchScreenButton" parent="."]
+[node name="Right" type="TouchScreenButton" parent="Control"]
 position = Vector2(996, 242)
 texture_normal = ExtResource("2_msvkn")
 action = "move_right"
 
-[node name="joystick" parent="." instance=ExtResource("3_j8vtj")]
+[node name="joystick" parent="Control" instance=ExtResource("3_j8vtj")]
 layout_mode = 1
-offset_top = 343.0
-offset_bottom = 643.0
+offset_top = 303.0
+offset_bottom = 603.0
+
+[node name="VerDispositivosAutorizados" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

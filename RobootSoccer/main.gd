@@ -9,6 +9,19 @@ extends CanvasLayer
 @export var contenedor_controles: NodePath # Nodo con los controles del juego
 
 func _ready():
+	var ips = IP.get_local_addresses()
+	var found = false
+	
+	if ips.size() > 0:
+		print("IPs locales disponibles (filtradas 192.168.x.x):")
+		for ip in ips:
+			if ip.begins_with("192.168."):
+				print("  - ", ip)
+				found = true
+	
+	if not found:
+		print("No se encontraron IPs locales en el rango 192.168.x.x.")
+
 	autorisar.pressed.connect(_on_autorizar_pressed)
 	timer.timeout.connect(_on_timer_timeout)
 
