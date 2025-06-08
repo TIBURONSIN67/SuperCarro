@@ -1,6 +1,5 @@
 extends Control
 
-@onready var websocket := WebSocketClient.new()
 var last_left = 0
 var last_right = 0
 var left = 0
@@ -14,10 +13,7 @@ var moving = false
 
 var joy_id = 0
 
-func _ready():
-	add_child(websocket)
-	websocket.connect_to_server("ws://192.168.4.1:81")
-	
+
 var forward = 0.0
 var turn = 0.0
 func _physics_process(delta):
@@ -89,8 +85,8 @@ func _physics_process(delta):
 			last_right = 0
 
 func _on_send_pressed(direction: Dictionary):
-	if websocket.is_connected:
-		websocket.send_json(direction)
+	if Global.websocket.is_connected:
+		Global.websocket.send_json(direction)
 		print("📤 Enviado:", direction)
 	else:
 		print("⚠️ No conectado")
