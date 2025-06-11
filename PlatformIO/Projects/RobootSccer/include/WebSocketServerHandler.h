@@ -9,14 +9,17 @@
 
 class WebSocketServerHandler {
 public:
-    WebSocketServerHandler(uint16_t port, HardwareSerial& serialRef);
+    WebSocketServerHandler(uint16_t port);
     void begin(const char* ssid, const char* password);
     void loop();
 
 private:
     WiFiMulti wifiMulti;
     WebSocketsServer webSocket;
-    HardwareSerial& serial;
+
+    bool wasConnected = false;
+    const char* ssidGlobal = nullptr;
+    const char* passwordGlobal = nullptr;
     
     void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
     void hexdump(const void* mem, uint32_t len, uint8_t cols = 16);

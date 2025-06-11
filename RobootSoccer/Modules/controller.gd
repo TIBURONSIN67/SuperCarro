@@ -5,7 +5,7 @@ var last_right = 0
 var left = 0
 var right = 0
 var base_speed = 255
-var turn_speed = 150
+var turn_speed = 255
 var velocity := 1  # 🔹 Control global de velocidad (entre 0.0 y 1.0)
 var moving = false
 
@@ -21,36 +21,40 @@ func _physics_process(delta):
 	turn = 0.0
 
 	# 🔒 Verificar si el mando actual está autorizado
-	if not Global.autorizados.has(joy_id):
-		# Si no está autorizado, no mover nada
+	# ✅ Autorizar si el joystick virtual está activo
+	var usando_joystick_virtual = joistick and joistick.output.length() > 0.1
+
+	if not Global.autorizados.has(joy_id) and not usando_joystick_virtual:
+		# Si no está autorizado y no es un joystick virtual, no mover nada
 		if moving:
 			_on_send_pressed({"left": 0, "right": 0})
 			last_left = 0
 			last_right = 0
 			moving = false
-		return  # 🔴 Evitar todo lo demás
+		return  # 🔒 Evitar todo lo demás
+
 
 	moving = false
 	
 	# 🔹 Entrada por joystick virtual (tiene prioridad)
 	if joistick and joistick.output.length() > 0.1:
-		forward = -joistick.output.y  # Invertido
+		forward = joistick.output.y  # Invertido
 		turn = joistick.output.x
 		moving = true
 
 	# 🔹 Si no hay joystick virtual, usar joystick físico
 	elif Input.get_connected_joypads().has(joy_id):
-		forward = Input.get_joy_axis(joy_id, JOY_AXIS_LEFT_Y) * -1  # Invertir Y
+		forward = Input.get_joy_axis(joy_id, JOY_AXIS_LEFT_Y)
 		turn = Input.get_joy_axis(joy_id, JOY_AXIS_LEFT_X)
 		if abs(forward) > 0.1 or abs(turn) > 0.1:
 			moving = true
 
 	# 🔹 Entrada por teclado
 	if Input.is_action_pressed("move_up"):
-		forward += 1
+		forward -= 1
 		moving = true
 	elif Input.is_action_pressed("move_down"):
-		forward -= 1
+		forward += 1
 		moving = true
 	if Input.is_action_pressed("move_left"):
 		turn -= 1

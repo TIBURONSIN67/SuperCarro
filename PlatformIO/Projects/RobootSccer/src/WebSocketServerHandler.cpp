@@ -5,64 +5,84 @@
 
 Controller controller(2, 5, 26, 12, 14, 25); // Ajusta pines si es necesario
 
+
+
 WebSocketServerHandler* WebSocketServerHandler::instance = nullptr;
 
-WebSocketServerHandler::WebSocketServerHandler(uint16_t port, HardwareSerial& serialRef)
-    : webSocket(port), serial(serialRef) {
+WebSocketServerHandler::WebSocketServerHandler(uint16_t port): webSocket(port){
     instance = this;
 }
 
+#include <IPAddress.h>
+
 void WebSocketServerHandler::begin(const char* ssid, const char* password) {
+    ssidGlobal = ssid;
+    passwordGlobal = password;
+
     Serial.setDebugOutput(true);
 
-    for (uint8_t t = 4; t > 0; t--) {
-        Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
-        Serial.flush();
-        delay(1000);
-    }
+    // IP estática deseada
+    IPAddress local_IP(192, 168, 1, 100);       // Cambia esto según tu red
+    IPAddress gateway(192, 168, 36, 199);          // Generalmente la IP del router
+    IPAddress subnet(255, 255, 255, 0);         // Máscara de subred
 
-    WiFi.mode(WIFI_STA); // Modo cliente
-
-    // ⚙️ Configurar IP fija (estática)
-    IPAddress local_IP(192, 168, 43, 20);   // IP deseada del ESP32
-    IPAddress gateway(192, 168, 144, 208);      // IP del router
-    IPAddress subnet(255, 255, 255, 0);      // Máscara de subred
-
+    // Solo IP, puerta de enlace y máscara
     if (!WiFi.config(local_IP, gateway, subnet)) {
-        Serial.println("⚠️ Error al configurar IP estática.");
+        Serial.println("⚠️ Error al configurar la IP estática");
     }
 
-    // 🌐 Intentar conectar infinitamente
-    Serial.println("Conectando a Wi-Fi...");
-    WiFi.begin(ssid, password);
 
+    int intento = 1;
     while (WiFi.status() != WL_CONNECTED) {
+        Serial.printf("⏳ Intento %d: Conectando a WiFi...\n", intento);
+
+        WiFi.disconnect(true);
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(ssidGlobal, passwordGlobal);
+
         delay(1000);
-        Serial.print(".");
-        
-        // Si falla, reintenta:
-        if (WiFi.status() == WL_DISCONNECTED) {
-            Serial.println("\nIntentando reconectar...");
-            WiFi.disconnect();
+
+        if (WiFi.status() != WL_CONNECTED) {
+            Serial.println("❌ No se pudo conectar. Reintentando...");
             delay(1000);
-            WiFi.begin(ssid, password);
+            intento++;
         }
     }
 
-    Serial.println("\nConectado a la red Wi-Fi.");
-    Serial.print("📡 Dirección IP: ");
+    Serial.println("✅ Conectado a la red WiFi.");
+    Serial.print("🌐 Dirección IP: ");
     Serial.println(WiFi.localIP());
 
-    // Iniciar tu lógica
+
+    // ==== CÓDIGO COMENTADO PARA CREAR ACCESS POINT ====
+    /*
+    WiFi.mode(WIFI_AP);
+    bool result = WiFi.softAP(ssidGlobal, passwordGlobal);
+
+    if (result) {
+        Serial.println("✅ Punto de acceso creado exitosamente.");
+        Serial.print("📡 Dirección IP del AP: ");
+        Serial.println(WiFi.softAPIP());
+    } else {
+        Serial.println("❌ Error al crear el punto de acceso.");
+    }
+    */
+
     controller.begin();
     webSocket.begin();
     webSocket.onEvent(_webSocketEventStatic);
+
+    wasConnected = true;
 }
+
 
 
 void WebSocketServerHandler::loop() {
     webSocket.loop();
 }
+
+
+
 
 void WebSocketServerHandler::_webSocketEventStatic(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
     if (instance) {

@@ -1,12 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cdx7qu2xjkte4"]
+[gd_scene load_steps=4 format=3 uid="uid://cdx7qu2xjkte4"]
 
 [ext_resource type="Script" uid="uid://57v0lsecsin5" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mawh4w2xj7dn" path="res://Modules/controller.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://dp6aadg0k401k" path="res://Modules/WebSocket/WebSocketClient.tscn" id="3_h2yge"]
 
-[node name="Main" type="CanvasLayer"]
+[node name="Main" type="CanvasLayer" node_paths=PackedStringArray("websocket")]
 script = ExtResource("1_ig7tw")
-tiempo_minutos = 0.1
 contenedor_controles = NodePath("Controller")
+websocket = NodePath("WebSocketClient")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchors_preset = 8
@@ -28,13 +29,26 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 32
 text = "Autorizar Mando"
 
+[node name="Connected" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 32
+text = "Conectar"
+
 [node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 placeholder_text = "Ingrese ID"
 alignment = 1
 
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Sin Novedades"
+
 [node name="Timer" type="Timer" parent="."]
 
 [node name="Controller" parent="." instance=ExtResource("2_0xm2m")]
-visible = false
+
+[node name="WebSocketClient" parent="." instance=ExtResource("3_h2yge")]

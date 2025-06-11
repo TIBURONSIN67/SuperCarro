@@ -11,7 +11,6 @@ script = ExtResource("1_8etvv")
 joistick = NodePath("Control/joystick")
 
 [node name="Control" type="Control" parent="."]
-visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -40,9 +39,3 @@ action = "move_right"
 layout_mode = 1
 offset_top = 303.0
 offset_bottom = 603.0
-
-[node name="VerDispositivosAutorizados" type="Control" parent="."]
-visible = false
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
