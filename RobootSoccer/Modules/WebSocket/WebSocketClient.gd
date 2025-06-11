@@ -2,7 +2,7 @@ extends Node
 class_name WebSocketClient
 
 var socket := WebSocketPeer.new()
-const SERVER_URL := "ws://192.168.100.20:81"  # Cambia esta IP si es necesario
+const SERVER_URL := "ws://192.168.36.100:81"  # Cambia esta IP si es necesario
 
 var is_connected := false
 var reconnect_timer := 0.0

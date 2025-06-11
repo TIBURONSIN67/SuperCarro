@@ -17,7 +17,7 @@ func _ready():
 	print("🌐 Mi IP es: ", my_ip)
 
 	# Usar la IP para algo, si hace falta
-	websocket.connect_to_server("ws://192,168,1,100:81")
+	websocket.connect_to_server()
 	Global.websocket = websocket
 
 	autorisar.pressed.connect(_on_autorizar_pressed)
@@ -25,7 +25,8 @@ func _ready():
 	connected.pressed.connect(_on_connected_pressed)
 
 func _on_connected_pressed():
-	websocket.connect_to_server("ws://192.168.4.1:81")
+	websocket.connect_to_server()
+	Global.websocket = websocket
 	
 func _on_autorizar_pressed():
 	if not line_edit.text.is_valid_int():

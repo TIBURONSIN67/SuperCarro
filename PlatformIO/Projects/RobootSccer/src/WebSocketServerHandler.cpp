@@ -2,6 +2,7 @@
 #include "Controller.h"
 #include <WiFi.h>
 #include <ArduinoJson.h>
+#include <IPAddress.h>
 
 Controller controller(2, 5, 26, 12, 14, 25); // Ajusta pines si es necesario
 
@@ -13,18 +14,15 @@ WebSocketServerHandler::WebSocketServerHandler(uint16_t port): webSocket(port){
     instance = this;
 }
 
-#include <IPAddress.h>
 
 void WebSocketServerHandler::begin(const char* ssid, const char* password) {
     ssidGlobal = ssid;
     passwordGlobal = password;
 
-    Serial.setDebugOutput(true);
 
-    // IP estática deseada
-    IPAddress local_IP(192, 168, 1, 100);       // Cambia esto según tu red
-    IPAddress gateway(192, 168, 36, 199);          // Generalmente la IP del router
-    IPAddress subnet(255, 255, 255, 0);         // Máscara de subred
+    IPAddress local_IP(192, 168, 36, 100);        // IP del ESP32
+    IPAddress gateway(192, 168, 36, 199);         // IP del router
+    IPAddress subnet(255, 255, 255, 0);           // Rango válido: 192.168.36.1 - 254
 
     // Solo IP, puerta de enlace y máscara
     if (!WiFi.config(local_IP, gateway, subnet)) {
@@ -39,7 +37,7 @@ void WebSocketServerHandler::begin(const char* ssid, const char* password) {
         WiFi.disconnect(true);
         WiFi.mode(WIFI_STA);
         WiFi.begin(ssidGlobal, passwordGlobal);
-
+        WiFi.setSleep(false);  
         delay(1000);
 
         if (WiFi.status() != WL_CONNECTED) {
@@ -54,19 +52,17 @@ void WebSocketServerHandler::begin(const char* ssid, const char* password) {
     Serial.println(WiFi.localIP());
 
 
-    // ==== CÓDIGO COMENTADO PARA CREAR ACCESS POINT ====
-    /*
-    WiFi.mode(WIFI_AP);
-    bool result = WiFi.softAP(ssidGlobal, passwordGlobal);
+    //==== CÓDIGO COMENTADO PARA CREAR ACCESS POINT ====
+    // WiFi.mode(WIFI_AP);
+    // bool result = WiFi.softAP(ssidGlobal, passwordGlobal);
 
-    if (result) {
-        Serial.println("✅ Punto de acceso creado exitosamente.");
-        Serial.print("📡 Dirección IP del AP: ");
-        Serial.println(WiFi.softAPIP());
-    } else {
-        Serial.println("❌ Error al crear el punto de acceso.");
-    }
-    */
+    // if (result) {
+    //     Serial.println("✅ Punto de acceso creado exitosamente.");
+    //     Serial.print("📡 Dirección IP del AP: ");
+    //     Serial.println(WiFi.softAPIP());
+    // } else {
+    //     Serial.println("❌ Error al crear el punto de acceso.");
+    // }
 
     controller.begin();
     webSocket.begin();
