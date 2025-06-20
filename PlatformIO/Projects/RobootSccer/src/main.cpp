@@ -1,20 +1,29 @@
-#include <Arduino.h>
-#include "WebSocketServerHandler.h"
+#include <WiFi.h>
+#include "WebSocketClientHandler.h"
 
-// Ajusta SSID y contraseña de tu punto de acceso WiFi
 const char* ssid = "SERVER";
 const char* password = "12345678";
 
-WebSocketServerHandler webSocketServer(81); // Puerto WebSocket y Serial para debug
+WebSocketClientHandler wsClient;
 
 void setup() {
-  // Iniciar el WebSocket y el AP
-  Serial.print("iniciando ....");
-  Serial.begin(115200);
-  webSocketServer.begin(ssid, password);
+    Serial.begin(115200);
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println();
+    Serial.println("WiFi Connected.");
+    Serial.print("IP: ");
+    Serial.println(WiFi.localIP());
+    WiFi.setSleep(false);
+    // Conectar al servidor WebSocket Godot (IP + puerto + path)
+    wsClient.begin("192.168.93.146", "/ws", nullptr, 9080, nullptr);
 }
 
 void loop() {
-  // Mantener el WebSocket escuchando
-  webSocketServer.loop();
+    wsClient.loop();
 }

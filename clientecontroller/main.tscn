@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://b48ubttjivcg6"]
+
+[ext_resource type="Script" uid="uid://bx45n5y7ojne7" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://mawh4w2xj7dn" path="res://Modules/webSocketClient/controller.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://cywv1oe4rulq" path="res://mostrar_mensaje.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://dsjl2d3h6e3bl" path="res://Modules/control.tscn" id="3_h2yge"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0xm2m")
+
+[node name="MostrarMensaje" parent="." instance=ExtResource("2_1bvp3")]
+layout_mode = 1
+
+[node name="Control" parent="." node_paths=PackedStringArray("mostrar_mensaje") instance=ExtResource("3_h2yge")]
+mostrar_mensaje = NodePath("../MostrarMensaje")
+
+[node name="Controller" parent="." node_paths=PackedStringArray("mostrar_mensaje") instance=ExtResource("1_ig7tw")]
+layout_mode = 1
+mostrar_mensaje = NodePath("../MostrarMensaje")
