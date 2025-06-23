@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b2h5eq8acs2d8"]
 
-[ext_resource type="Script" uid="uid://bbgo8ku8x7wfx" path="res://mostrar_mensaje.gd" id="1_birru"]
+[ext_resource type="Script" uid="uid://bbgo8ku8x7wfx" path="res://Modules/showMessage/mostrar_mensaje.gd" id="1_birru"]
 
 [node name="MostrarMensaje" type="Control"]
 layout_mode = 3

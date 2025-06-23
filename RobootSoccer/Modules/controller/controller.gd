@@ -16,7 +16,7 @@ var joy_id = 0
 
 var forward = 0.0
 var turn = 0.0
-func _physics_process(delta):
+func _physics_process(_delta):
 	forward = 0.0
 	turn = 0.0
 
@@ -93,7 +93,7 @@ func round_decimals(value: float, digits: int = 2) -> float:
 	var factor = pow(10.0, digits)
 	return round(value * factor) / factor
 
-func _on_send_pressed(direction: Dictionary, control_id):
+func _on_send_pressed(_direction: Dictionary, _control_id):
 	if Global.websocket.is_connected:
 		pass
 		#Global.websocket.send_json_to_role("carro", direction)

@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cywv1oe4rulq" path="res://mostrar_mensaje.tscn" id="2_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://dsjl2d3h6e3bl" path="res://Modules/control.tscn" id="3_h2yge"]
 
-[node name="Main" type="Control"]
+[node name="Main" type="Control" node_paths=PackedStringArray("websocket")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,13 +13,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0xm2m")
+websocket = NodePath("WebSOcketClient")
 
 [node name="MostrarMensaje" parent="." instance=ExtResource("2_1bvp3")]
 layout_mode = 1
 
-[node name="Control" parent="." node_paths=PackedStringArray("mostrar_mensaje") instance=ExtResource("3_h2yge")]
+[node name="Controller" parent="." node_paths=PackedStringArray("websocket", "mostrar_mensaje") instance=ExtResource("1_ig7tw")]
+layout_mode = 1
+websocket = NodePath("../WebSOcketClient")
 mostrar_mensaje = NodePath("../MostrarMensaje")
 
-[node name="Controller" parent="." node_paths=PackedStringArray("mostrar_mensaje") instance=ExtResource("1_ig7tw")]
-layout_mode = 1
+[node name="WebSOcketClient" parent="." node_paths=PackedStringArray("mostrar_mensaje") instance=ExtResource("3_h2yge")]
 mostrar_mensaje = NodePath("../MostrarMensaje")
